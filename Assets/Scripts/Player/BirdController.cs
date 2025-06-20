@@ -10,7 +10,7 @@ public class BirdController : MonoBehaviour
     public InputSystemActions inputActions;
     private InputAction _jump;
     private GameManager _gameManager;
-    
+    private float _currentAngle = 0f;
 
     private void Awake()
     {
@@ -28,6 +28,14 @@ public class BirdController : MonoBehaviour
         {
             Debug.LogError("GameManager not found! Make sure it is tagged correctly.");
         }
+    }
+
+    private void Update()
+    {
+        var velocity = rb.linearVelocityY;
+        var newAngle = (_currentAngle + 45 * Mathf.Max(velocity, -2 * jumpVelocity) / jumpVelocity)/2;
+        _currentAngle = newAngle; // used to smooth the angle change between jumps
+        transform.rotation = Quaternion.Euler(0, 0, newAngle);
     }
 
     private void OnEnable()

@@ -1,3 +1,4 @@
+using Managers;
 using UnityEngine;
 using Utilities;
 
@@ -10,6 +11,8 @@ public class Pipe : MonoBehaviour
     
     private BoxCollider2D _boxColliderTop;
     private BoxCollider2D _boxColliderBottom;
+
+    private GameManager _gameManager;
     
     private void Awake()
     {
@@ -42,14 +45,24 @@ public class Pipe : MonoBehaviour
     
     private void Start()
     {
+        var obj = GameObject.FindGameObjectWithTag("GameManager");
+        if (obj != null)
+        {
+            _gameManager = obj.GetComponent<GameManager>();
+        }
+        else
+        {
+            Debug.LogError("GameManager not found! Make sure it is tagged correctly.");
+        }
         Debug.Log($"Pipe Position: {transform.position.x}, Game Bounds Left: {GameBounds.Left}");
     }
 
     // Update is called once per frame
     private void Update()
     {
-        transform.Translate(Vector3.left * (speed * Time.deltaTime));
-        //if (transform.position.x < GameBounds.Left) Destroy(gameObject);
+        transform.Translate(Vector3.left * (speed * Time.deltaTime * _gameManager.gameSpeed));
+		// if out of screen, destroy (offset by pipe width)
+        if (transform.position.x < GameBounds.Left - _boxColliderTop.bounds.size.x) Destroy(gameObject);
     }
 
     
@@ -65,7 +78,7 @@ public class Pipe : MonoBehaviour
         // bottom of top pipe - top of bottom pipe
         var gap = _boxColliderTop.bounds.min.y - _boxColliderBottom.bounds.max.y;
         // how much each of them needs to move closer to the other
-        var squeezeAmount = (gap - gap * rate)/2;
+        var squeezeAmount = gap * rate/2;
         
         _pipeTop.position = new Vector3(_pipeTop.position.x, _pipeTop.position.y - squeezeAmount, _pipeTop.position.z);
         _pipeBottom.position = new Vector3(_pipeBottom.position.x, _pipeBottom.position.y + squeezeAmount, _pipeBottom.position.z);

@@ -10,6 +10,7 @@ public class BirdController : MonoBehaviour
     public InputSystemActions inputActions;
     private InputAction _jump;
     private GameManager _gameManager;
+    public AudioSource jumpSound;
     private float _currentAngle = 0f;
 
     private void Awake()
@@ -55,6 +56,14 @@ public class BirdController : MonoBehaviour
         if (context.performed && !_gameManager.isGameOver)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpVelocity);
+        }
+        if (jumpSound != null)
+        {
+            jumpSound.Play();
+        }
+        else
+        {
+            Debug.LogWarning("Jump sound not assigned in BirdController!");
         }
     }
 

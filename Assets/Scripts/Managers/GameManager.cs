@@ -14,7 +14,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public bool isGameOver = false;
     public GameObject gameOverScreen;
-
+    public AudioSource gameOverSound;
+    public AudioSource scoreSound;
     
     private void Start()
     {
@@ -35,6 +36,14 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning("Score Text is not assigned in the GameManager!");
         }
+        if (scoreSound != null)
+        {
+            scoreSound.Play();
+        }
+        else
+        {
+            Debug.LogWarning("Score Sound is not assigned in the GameManager!");
+        }
     }
 
     public void RestartGame()
@@ -52,6 +61,14 @@ public class GameManager : MonoBehaviour
         isGameOver = true;
         gameSpeed /= 2;
         gameOverScreen.SetActive(isGameOver);
+        if (gameOverSound != null)
+        {
+            gameOverSound.Play();
+        }
+        else
+        {
+            Debug.LogWarning("Game Over Sound is not assigned in the GameManager!");
+        }
     }
     
 }
